@@ -1,0 +1,21 @@
+{
+  "extends": ["config:base"],
+  "enabledManagers": ["dockerfile"],
+  "dockerfile": {
+    "fileMatch": ["(^|/)Dockerfile$"]
+  },
+  "packageRules": [
+    {
+      "matchDatasources": ["docker"],
+      "groupName": "Docker base image updates",
+      "schedule": ["at any time"]
+    },
+    {
+      "matchFileNames": ["Dockerfile"],
+      "matchManagers": ["dockerfile"],
+      "groupName": "Tool version updates"
+    }
+  ],
+  "prHourlyLimit": 2,
+  "labels": ["dependencies", "renovate"]
+}
