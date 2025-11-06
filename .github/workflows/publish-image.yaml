@@ -4,11 +4,15 @@ on:
   push:
     branches: [ main ]
     tags: [ 'v*' ]
+    paths:
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'scripts/**'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     permissions:
       contents: read
       packages: write
@@ -39,4 +43,3 @@ jobs:
           tags: |
             ghcr.io/${{ env.owner_lc }}/devops-tools:latest
             ghcr.io/${{ env.owner_lc }}/devops-tools:${{ github.ref_name }}
-
