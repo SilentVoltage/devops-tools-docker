@@ -185,7 +185,7 @@ MIT License © [Pavel Rudziankou]
 
 ## 💡 Maintainer
 
-**Maintainer:** [Pavel Rudziankou](https://github.com/derzkiy-dobryak)
-**Registry:** `ghcr.io/<your-org>/devops-tools`
+**Maintainer:** [Pavel Rudziankou](https://github.com/SilentVoltage)
+**Registry:** `ghcr.io/SilentVoltage/devops-tools`
 
 ---
