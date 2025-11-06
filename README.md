@@ -182,7 +182,7 @@ RUN apk add --no-cache make aws-sam-cli
 
 ## 🧾 License
 
-MIT License © [Your Name or Organization]
+MIT License © [Pavel Rudziankou]
 
 ---
 
