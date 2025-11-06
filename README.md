@@ -6,8 +6,6 @@ It bundles the most commonly used **cloud CLIs**, **Kubernetes tools**, and **Te
 
 Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines** that need a consistent DevOps CLI workspace.
 
----
-
 ## 🚀 Features
 
 - 🧩 **Cloud CLIs**
