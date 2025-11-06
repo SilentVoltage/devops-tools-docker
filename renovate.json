@@ -1,21 +1,61 @@
 {
-  "extends": ["config:base"],
-  "enabledManagers": ["dockerfile"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    ":label(renovate)"
+  ],
   "dockerfile": {
-    "fileMatch": ["(^|/)Dockerfile$"]
+    "enabled": true
   },
-  "packageRules": [
+  "regexManagers": [
     {
-      "matchDatasources": ["docker"],
-      "groupName": "Docker base image updates",
-      "schedule": ["at any time"]
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG ALPINE_VERSION=(?<currentValue>[0-9.]+)",
+        "ARG AWS_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG KUBE_VERSION=\"?v?(?<currentValue>[0-9.]+)\"?",
+        "ARG KUBECTX_VERSION=\"?v?(?<currentValue>[0-9.]+)\"?",
+        "ARG HELM_VERSION=\"?v?(?<currentValue>[0-9.]+)\"?",
+        "ARG TGENV_VERSION=\"?v?(?<currentValue>[0-9.]+)\"?",
+        "ARG TFENV_VERSION=\"?v?(?<currentValue>[0-9.]+)\"?",
+        "ARG TF_DOCS_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG TERRAGRUNT_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG TERRAFORM_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG AZ_CLI_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG HCLOUD_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG OCI_CLI_VERSION=\"?(?<currentValue>[0-9.]+)\"?",
+        "ARG GCLOUD_VERSION=\"?(?<currentValue>[0-9.]+)\"?"
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "{{argName}}",
+      "versioningTemplate": "semver"
     },
     {
-      "matchFileNames": ["Dockerfile"],
-      "matchManagers": ["dockerfile"],
-      "groupName": "Tool version updates"
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "https://github\\.com/aws/aws-cli\\.git",
+        "https://github\\.com/ahmetb/kubectx",
+        "https://get\\.helm\\.sh/helm-(?<currentValue>v[0-9.]+)-linux-amd64\\.tar\\.gz",
+        "https://github\\.com/cunymatthieu/tgenv\\.git",
+        "https://github\\.com/tfutils/tfenv\\.git",
+        "https://github\\.com/terraform-docs/terraform-docs/releases/download/v(?<currentValue>[0-9.]+)/",
+        "https://github\\.com/hetznercloud/cli/releases/download/v(?<currentValue>[0-9.]+)/",
+        "https://dl\\.google\\.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-(?<currentValue>[0-9.]+)-linux-x86_64\\.tar\\.gz"
+      ],
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "semver"
     }
   ],
-  "prHourlyLimit": 2,
-  "labels": ["dependencies", "renovate"]
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "matchDatasources": ["github-tags", "github-releases"],
+      "groupName": "DevOps Tool Versions",
+      "commitMessageTopic": "{{depName}} version",
+      "commitMessagePrefix": "chore(deps): update"
+    }
+  ],
+  "labels": ["docker", "devops", "dependencies"]
 }
