@@ -17,18 +17,79 @@
       ],
       "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
-    },
-    {
-      "fileMatch": ["(^|/)Dockerfile$"],
-      "matchStrings": [
-        "https://github\\.com/(?<depName>[A-Za-z0-9_.\\-/]+)/releases/download/v(?<currentValue>[0-9.]+)/",
-        "https://get\\.helm\\.sh/helm-(?<currentValue>v[0-9.]+)-linux-amd64\\.tar\\.gz"
-      ],
-      "datasourceTemplate": "github-releases",
-      "versioningTemplate": "semver"
     }
   ],
   "packageRules": [
+    {
+      "matchDepNames": ["ALPINE_VERSION"],
+      "datasource": "docker",
+      "depName": "alpine"
+    },
+    {
+      "matchDepNames": ["AWS_VERSION"],
+      "datasource": "github-releases",
+      "depName": "aws/aws-cli"
+    },
+    {
+      "matchDepNames": ["KUBE_VERSION"],
+      "datasource": "github-releases",
+      "depName": "kubernetes/kubernetes"
+    },
+    {
+      "matchDepNames": ["KUBECTX_VERSION"],
+      "datasource": "github-releases",
+      "depName": "ahmetb/kubectx"
+    },
+    {
+      "matchDepNames": ["HELM_VERSION"],
+      "datasource": "github-releases",
+      "depName": "helm/helm"
+    },
+    {
+      "matchDepNames": ["TGENV_VERSION"],
+      "datasource": "github-releases",
+      "depName": "cunymatthieu/tgenv"
+    },
+    {
+      "matchDepNames": ["TFENV_VERSION"],
+      "datasource": "github-releases",
+      "depName": "tfutils/tfenv"
+    },
+    {
+      "matchDepNames": ["TF_DOCS_VERSION"],
+      "datasource": "github-releases",
+      "depName": "terraform-docs/terraform-docs"
+    },
+    {
+      "matchDepNames": ["TERRAGRUNT_VERSION"],
+      "datasource": "github-releases",
+      "depName": "gruntwork-io/terragrunt"
+    },
+    {
+      "matchDepNames": ["TERRAFORM_VERSION"],
+      "datasource": "github-releases",
+      "depName": "hashicorp/terraform"
+    },
+    {
+      "matchDepNames": ["AZ_CLI_VERSION"],
+      "datasource": "pypi",
+      "depName": "azure-cli"
+    },
+    {
+      "matchDepNames": ["HCLOUD_VERSION"],
+      "datasource": "github-releases",
+      "depName": "hetznercloud/cli"
+    },
+    {
+      "matchDepNames": ["OCI_CLI_VERSION"],
+      "datasource": "pypi",
+      "depName": "oci-cli"
+    },
+    {
+      "matchDepNames": ["GCLOUD_VERSION"],
+      "datasource": "github-releases",
+      "depName": "GoogleCloudPlatform/cloud-sdk-docker"
+    },
     {
       "matchManagers": ["regex"],
       "groupName": "DevOps Tool Versions",
