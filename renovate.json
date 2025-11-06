@@ -1,0 +1,235 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":separateMajorReleases",
+    ":label(renovate)"
+  ],
+  "dockerfile": {
+    "enabled": true
+  },
+  "regexManagers": [
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>ALPINE_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "alpine",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>AWS_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "aws/aws-cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>KUBE_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "kubernetes/kubernetes",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>KUBECTX_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "ahmetb/kubectx",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>HELM_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "helm/helm",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>TGENV_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "cunymatthieu/tgenv",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>TFENV_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tfutils/tfenv",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>TF_DOCS_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "terraform-docs/terraform-docs",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>TERRAGRUNT_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "gruntwork-io/terragrunt",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>TERRAFORM_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "hashicorp/terraform",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>AZ_CLI_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "pypi",
+      "depNameTemplate": "azure-cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>HCLOUD_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "hetznercloud/cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>OCI_CLI_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "pypi",
+      "depNameTemplate": "oci-cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "fileMatch": ["(^|/)Dockerfile$"],
+      "matchStrings": [
+        "ARG (?<depName>GCLOUD_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "GoogleCloudPlatform/cloud-sdk-docker",
+      "versioningTemplate": "semver"
+    },
+
+    /* --- README version syncs --- */
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Alpine \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "alpine",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| AWS CLI \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "aws/aws-cli",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Azure CLI \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "azure-cli",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Google Cloud SDK \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "GoogleCloudPlatform/cloud-sdk-docker",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| OCI CLI \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "oci-cli",
+      "datasourceTemplate": "pypi"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Hetzner CLI \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "hetznercloud/cli",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| kubectl \\| v?(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "kubernetes/kubernetes",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| kubectx / kubens \\| v?(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "ahmetb/kubectx",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Helm \\| v?(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "helm/helm",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| tfenv \\| v?(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "tfutils/tfenv",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| tgenv \\| v?(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "cunymatthieu/tgenv",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Terraform \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "hashicorp/terraform",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| Terragrunt \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "gruntwork-io/terragrunt",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["^README\\.md$"],
+      "matchStrings": ["\\| terraform-docs \\| (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "terraform-docs/terraform-docs",
+      "datasourceTemplate": "github-releases"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["regex"],
+      "groupName": "DevOps Tool Versions",
+      "commitMessagePrefix": "chore(deps): update",
+      "commitMessageTopic": "{{depName}} version"
+    }
+  ],
+  "labels": ["docker", "devops", "dependencies"]
+}
