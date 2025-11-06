@@ -171,7 +171,7 @@ docker build \
 Add more tools with a simple `Dockerfile`:
 
 ```dockerfile
-FROM ghcr.io/<your-org>/devops-tools:latest
+FROM ghcr.io/SilentVoltage/devops-tools:latest
 RUN apk add --no-cache make aws-sam-cli
 ```
 
@@ -179,13 +179,13 @@ RUN apk add --no-cache make aws-sam-cli
 
 ## 🧾 License
 
-MIT License © [Pavel Rudziankou]
+MIT License
 
 ---
 
 ## 💡 Maintainer
 
-**Maintainer:** [Pavel Rudziankou](https://github.com/SilentVoltage)
+**Maintainer:** [SilentVoltage](https://github.com/SilentVoltage)
 **Registry:** `ghcr.io/SilentVoltage/devops-tools`
 
 ---
