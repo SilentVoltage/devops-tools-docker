@@ -1,5 +1,3 @@
----
-
 ````markdown
 # 🧰 DevOps Tools Docker Image
 
