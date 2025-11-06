@@ -1,4 +1,3 @@
-````markdown
 # 🧰 DevOps Tools Docker Image
 
 A lightweight, all-in-one **DevOps toolkit** container built on **Alpine Linux** with **Python 3.10**.  
