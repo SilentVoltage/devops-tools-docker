@@ -45,4 +45,4 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ env.owner_lc }}/devops-tools:latest
-            ghcr.io/${{ env.owner_lc }}/devops-tools:${{ github.ref_name }}
+            ghcr.io/${{ env.owner_lc }}/devops-tools:${{ github.sha }}
