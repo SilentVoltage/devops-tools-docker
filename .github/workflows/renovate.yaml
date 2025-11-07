@@ -1,7 +1,7 @@
 name: Renovate
 on:
   schedule:
-    - cron: '0 */12 * * *'  # every 6 hours
+    - cron: '0 14 * * 2'
   workflow_dispatch:
 
 jobs:
