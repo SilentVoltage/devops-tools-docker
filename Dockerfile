@@ -34,7 +34,7 @@ RUN git clone --depth 1 -b ${AWS_VERSION} https://github.com/aws/aws-cli.git \
  && find /usr/local/lib/aws-cli/awscli/botocore/data -name "examples-1.json" -delete \
  && (cd /usr/local/lib/aws-cli; for a in *.so*; do test -f /lib/$a && rm $a; done)
 
- ################ KUBECTL + KUBECTX/KUBENS ################
+################ KUBECTL + KUBECTX/KUBENS ################
 FROM base-builder AS kube-tools-builder
 ARG KUBE_VERSION
 ARG KUBECTX_VERSION
@@ -149,7 +149,7 @@ ENV HOME=/home/devops
 ENV PATH="/usr/local/tgenv/bin:/usr/local/tfenv/bin:/usr/local/bin:/usr/local/gcloud/bin:$PATH"
 WORKDIR /home/devops
 
- RUN tfenv install ${TERRAFORM_VERSION} && tfenv use ${TERRAFORM_VERSION} \
+RUN tfenv install ${TERRAFORM_VERSION} && tfenv use ${TERRAFORM_VERSION} \
  && tgenv install ${TERRAGRUNT_VERSION} && tgenv use ${TERRAGRUNT_VERSION}
 
 USER devops
