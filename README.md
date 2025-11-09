@@ -54,7 +54,7 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 
 ### Run interactively
 ```bash
-docker run -it --rm ghcr.io/<your-org>/devops-tools:latest /bin/bash
+docker run -it --rm ghcr.io/silentvoltage/devops-tools:latest /bin/bash
 ````
 
 ### Mount current working directory
@@ -62,7 +62,7 @@ docker run -it --rm ghcr.io/<your-org>/devops-tools:latest /bin/bash
 ```bash
 docker run -it --rm \
   -v $(pwd):/workdir \
-  ghcr.io/<your-org>/devops-tools:latest
+  ghcr.io/silentvoltage/devops-tools:latest
 ```
 
 ### Example: Terraform
@@ -70,7 +70,7 @@ docker run -it --rm \
 ```bash
 docker run -it --rm \
   -v $(pwd):/workdir \
-  ghcr.io/<your-org>/devops-tools:latest \
+  ghcr.io/silentvoltage/devops-tools:latest \
   terraform plan
 ```
 
@@ -79,7 +79,7 @@ docker run -it --rm \
 ```bash
 docker run -it --rm \
   -v ~/.kube/config:/home/devops/.kube/config:ro \
-  ghcr.io/<your-org>/devops-tools:latest \
+  ghcr.io/silentvoltage/devops-tools:latest \
   kubectl get pods
 ```
 
@@ -108,7 +108,7 @@ devops_tools() {
     -v "$DEVOPS_HOME/terragrunt:/home/devops/.terragrunt.d" \
     -v "$(pwd):/workdir" \
     -w /workdir \
-    ghcr.io/<your-org>/devops-tools:latest "$@"
+    ghcr.io/silentvoltage/devops-tools:latest "$@"
 }
 
 # Optional alias for quick access
@@ -149,7 +149,7 @@ and automatically mounts them into the container at runtime.
 To build your own version:
 
 ```bash
-git clone https://github.com/<your-org>/devops-tools.git
+git clone https://github.com/silentvoltage/devops-tools.git
 cd devops-tools
 
 docker build -t devops-tools:latest .
@@ -171,7 +171,7 @@ docker build \
 Add more tools with a simple `Dockerfile`:
 
 ```dockerfile
-FROM ghcr.io/SilentVoltage/devops-tools:latest
+FROM ghcr.io/silentvoltage/devops-tools:latest
 RUN apk add --no-cache make aws-sam-cli
 ```
 
@@ -186,6 +186,7 @@ MIT License
 ## 💡 Maintainer
 
 **Maintainer:** [SilentVoltage](https://github.com/SilentVoltage)
-**Registry:** `ghcr.io/SilentVoltage/devops-tools`
+
+**Registry:** `ghcr.io/silentvoltage/devops-tools`
 
 ---
