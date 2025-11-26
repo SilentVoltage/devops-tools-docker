@@ -44,8 +44,8 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Helm | v3.19.2 |
 | tfenv | v3.0.0 |
 | tgenv | v0.0.3 |
-| Terraform | 1.13.5 |
-| Terragrunt | 0.93.9 |
+| Terraform | 1.14.0 |
+| Terragrunt | 0.93.11 |
 | terraform-docs | 0.20.0 |
 
 ---
