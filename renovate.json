@@ -9,9 +9,12 @@
   "dockerfile": {
     "enabled": true
   },
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>ALPINE_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -20,7 +23,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>AWS_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -29,7 +35,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>KUBE_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -38,7 +47,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>KUBECTX_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -47,7 +59,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>HELM_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -56,7 +71,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>TGENV_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -65,7 +83,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>TFENV_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -74,7 +95,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>TF_DOCS_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -83,7 +107,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>TERRAGRUNT_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -92,7 +119,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>TERRAFORM_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -101,7 +131,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>AZ_CLI_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -110,7 +143,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>HCLOUD_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -119,7 +155,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>OCI_CLI_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -128,7 +167,10 @@
       "versioningTemplate": "semver"
     },
     {
-      "fileMatch": ["(^|/)Dockerfile$"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
       "matchStrings": [
         "ARG (?<depName>GCLOUD_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
       ],
@@ -136,100 +178,174 @@
       "depNameTemplate": "GoogleCloudPlatform/cloud-sdk-docker",
       "versioningTemplate": "semver"
     },
-
-    /* --- README version syncs --- */
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Alpine \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Alpine \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "alpine",
       "datasourceTemplate": "docker"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| AWS CLI \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| AWS CLI \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "aws/aws-cli",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Azure CLI \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Azure CLI \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "azure-cli",
       "datasourceTemplate": "pypi"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Google Cloud SDK \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Google Cloud SDK \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "GoogleCloudPlatform/cloud-sdk-docker",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| OCI CLI \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| OCI CLI \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "oci-cli",
       "datasourceTemplate": "pypi"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Hetzner CLI \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Hetzner CLI \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "hetznercloud/cli",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| kubectl \\| v?(?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| kubectl \\| v?(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "kubernetes/kubernetes",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| kubectx / kubens \\| v?(?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| kubectx / kubens \\| v?(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "ahmetb/kubectx",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Helm \\| v?(?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Helm \\| v?(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "helm/helm",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| tfenv \\| v?(?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| tfenv \\| v?(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "tfutils/tfenv",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| tgenv \\| v?(?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| tgenv \\| v?(?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "cunymatthieu/tgenv",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Terraform \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Terraform \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "hashicorp/terraform",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| Terragrunt \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Terragrunt \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "gruntwork-io/terragrunt",
       "datasourceTemplate": "github-releases"
     },
     {
-      "fileMatch": ["^README\\.md$"],
-      "matchStrings": ["\\| terraform-docs \\| (?<currentValue>[0-9.]+)"],
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| terraform-docs \\| (?<currentValue>[0-9.]+)"
+      ],
       "depNameTemplate": "terraform-docs/terraform-docs",
       "datasourceTemplate": "github-releases"
     }
   ],
   "packageRules": [
     {
-      "matchManagers": ["regex"],
+      "matchManagers": [
+        "custom.regex"
+      ],
       "groupName": "DevOps Tool Versions",
       "commitMessagePrefix": "chore(deps): update",
       "commitMessageTopic": "{{depName}} version"
     }
   ],
-  "labels": ["docker", "devops", "dependencies"]
+  "labels": [
+    "docker",
+    "devops",
+    "dependencies"
+  ]
 }
