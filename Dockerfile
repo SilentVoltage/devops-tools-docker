@@ -111,7 +111,8 @@ ARG TERRAGRUNT_VERSION
 ARG TERRAFORM_VERSION
 
 RUN apk add --no-cache bash curl git jq ncurses openssh python3 py3-pip
-RUN addgroup -S devops && adduser -S devops -G devops -h /home/devops
+RUN addgroup -g 1000 -S devops \
+ && adduser -S -D -H -u 1000 -G devops -h /home/devops devops
 
 COPY --from=aws-cli-builder /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
 RUN ln -s /usr/local/lib/aws-cli/aws /usr/local/bin/aws
@@ -145,8 +146,6 @@ RUN mkdir -p /home/devops/bin \
  && chmod +x /usr/local/bin/* && chmod +x /usr/local/tgenv/bin/* || true
 
 USER root
-RUN addgroup -g 1000 -S devops \
- && adduser -S -D -H -u 1000 -G devops -h /home/devops devops
 ENV HOME=/home/devops
 ENV PATH="/usr/local/tgenv/bin:/usr/local/tfenv/bin:/usr/local/bin:/usr/local/gcloud/bin:$PATH"
 WORKDIR /home/devops
