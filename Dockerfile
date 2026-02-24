@@ -15,6 +15,7 @@ ARG AZ_CLI_VERSION="2.83.0"
 ARG HCLOUD_VERSION="1.61.0"
 ARG OCI_CLI_VERSION="3.74.2"
 ARG GCLOUD_VERSION="443.0.0"
+ARG SOPS_VERSION="3.8.1"
 
 ################ BASE BUILDER ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS base-builder
@@ -104,6 +105,17 @@ RUN curl -fsSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/googl
  && ln -s /usr/local/gcloud/bin/bq /usr/local/bin/bq \
  && rm -f /gcloud.tar.gz
 
+################ SOPS ################
+FROM base-builder AS sops-builder
+ARG SOPS_VERSION
+
+RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux-amd64 \
+    -o /usr/local/bin/sops \
+ && chmod +x /usr/local/bin/sops \
+ && /usr/local/bin/sops --version
+ 
+ RUN apk add --no-cache age
+
 ################ DEVOPS TOOLS ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS devops-tools
 
@@ -135,6 +147,8 @@ COPY --from=oracle-cli-builder /usr/local/lib/python3.10/site-packages /usr/loca
 COPY --from=oracle-cli-builder /usr/local/bin/oci /usr/local/bin/oci
 
 COPY --from=gcloud-cli-builder /usr/local/gcloud /usr/local/gcloud
+
+COPY --from=sops-builder /usr/local/bin/sops /usr/local/bin/sops
 
 RUN ln -s /usr/local/gcloud/bin/gcloud /usr/local/bin/gcloud \
  && ln -s /usr/local/gcloud/bin/gsutil /usr/local/bin/gsutil \
