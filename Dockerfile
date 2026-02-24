@@ -15,7 +15,7 @@ ARG AZ_CLI_VERSION="2.83.0"
 ARG HCLOUD_VERSION="1.61.0"
 ARG OCI_CLI_VERSION="3.74.2"
 ARG GCLOUD_VERSION="443.0.0"
-ARG SOPS_VERSION="3.8.1"
+ARG SOPS_VERSION="4.45.0"
 
 ################ BASE BUILDER ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS base-builder
@@ -108,13 +108,10 @@ RUN curl -fsSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/googl
 ################ SOPS ################
 FROM base-builder AS sops-builder
 ARG SOPS_VERSION
-
-RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux-amd64 \
+RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux \
     -o /usr/local/bin/sops \
  && chmod +x /usr/local/bin/sops \
  && /usr/local/bin/sops --version
- 
- RUN apk add --no-cache age
 
 ################ DEVOPS TOOLS ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS devops-tools
