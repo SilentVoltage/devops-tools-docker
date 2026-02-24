@@ -108,8 +108,7 @@ RUN curl -fsSL "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/googl
 ################ SOPS ################
 FROM base-builder AS sops-builder
 ARG SOPS_VERSION
-RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux \
-    -o /usr/local/bin/sops \
+RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.amd64 -o /usr/local/bin/sops \
  && chmod +x /usr/local/bin/sops \
  && /usr/local/bin/sops --version
 
