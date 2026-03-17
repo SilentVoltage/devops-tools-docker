@@ -41,10 +41,10 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Hetzner CLI | 1.61.0 |
 | kubectl | v1.35.2 |
 | kubectx / kubens | v0.9.5 |
-| Helm | v4.1.1 |
+| Helm | v4.1.3 |
 | tfenv | v3.0.0 |
 | tgenv | v0.0.3 |
-| Terraform | 1.14.6 |
+| Terraform | 1.14.7 |
 | Terragrunt | 0.99.4 |
 | terraform-docs | 0.21.0 |
 
