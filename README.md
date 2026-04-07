@@ -45,7 +45,7 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | tfenv | v3.0.0 |
 | tgenv | v0.0.3 |
 | Terraform | 1.14.7 |
-| Terragrunt | 0.99.4 |
+| Terragrunt | 1.0.0 |
 | terraform-docs | 0.21.0 |
 
 ---
