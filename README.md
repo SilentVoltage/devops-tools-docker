@@ -35,9 +35,9 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Alpine | 3.24 |
 | Python | 3.10 |
 | AWS CLI | 2.13.0 |
-| Azure CLI | 2.88.0 |
+| Azure CLI | 2.89.0 |
 | Google Cloud SDK | 443.0.0 |
-| OCI CLI | 3.90.0 |
+| OCI CLI | 3.90.2 |
 | Hetzner CLI | 1.67.0 |
 | kubectl | v1.36.3 |
 | kubectx / kubens | v0.11.0 |
