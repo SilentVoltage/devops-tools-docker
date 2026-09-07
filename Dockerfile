@@ -1,7 +1,9 @@
 ############################
 # Versions
 ############################
-ARG ALPINE_VERSION=3.17
+# NOTE: python:3.10 reaches upstream end-of-life in Oct 2026. Plan a bump to
+# 3.12/3.13 (validate azure-cli / oci-cli wheels on musl when you do).
+ARG ALPINE_VERSION=3.24
 ARG AWS_VERSION="2.13.0"
 ARG KUBE_VERSION="v1.37.0"
 ARG KUBECTX_VERSION="v0.11.0"
@@ -40,8 +42,10 @@ FROM base-builder AS kube-tools-builder
 ARG KUBE_VERSION
 ARG KUBECTX_VERSION
 
-RUN curl -fsSL https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl \
- && chmod +x /usr/local/bin/kubectl
+RUN curl -fsSL "https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl" -o /tmp/kubectl \
+ && echo "$(curl -fsSL https://dl.k8s.io/release/${KUBE_VERSION}/bin/linux/amd64/kubectl.sha256)  /tmp/kubectl" > /tmp/kubectl.sha256 \
+ && sha256sum -c /tmp/kubectl.sha256 \
+ && install -m 0755 /tmp/kubectl /usr/local/bin/kubectl
 
 RUN git clone --depth 1 -b ${KUBECTX_VERSION} https://github.com/ahmetb/kubectx /kubectx \
  && cp /kubectx/kubectx /kubectx/kubens /usr/local/bin/ \
@@ -51,11 +55,12 @@ RUN git clone --depth 1 -b ${KUBECTX_VERSION} https://github.com/ahmetb/kubectx 
 ################ HELM ################
 FROM base-builder AS helm-builder
 ARG HELM_VERSION
-RUN curl -fsSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz -o /helm.tar.gz \
+RUN curl -fsSL "https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz" -o /helm.tar.gz \
+ && echo "$(curl -fsSL https://get.helm.sh/helm-${HELM_VERSION}-linux-amd64.tar.gz.sha256)  /helm.tar.gz" > /helm.tar.gz.sha256 \
+ && sha256sum -c /helm.tar.gz.sha256 \
  && tar -xzf /helm.tar.gz \
- && mv linux-amd64/helm /usr/local/bin/helm \
- && chmod +x /usr/local/bin/helm \
- && rm -rf linux-amd64 helm.tar.gz
+ && install -m 0755 linux-amd64/helm /usr/local/bin/helm \
+ && rm -rf linux-amd64 helm.tar.gz helm.tar.gz.sha256
 
 ################ TF TOOLS (tgenv/tfenv + terraform-docs) ################
 FROM base-builder AS tf-tools-builder
@@ -118,8 +123,8 @@ FROM python:3.10-alpine${ALPINE_VERSION} AS devops-tools
 ARG TERRAGRUNT_VERSION
 ARG TERRAFORM_VERSION
 
-RUN apk add --no-cache bash curl git jq ncurses openssh python3 py3-pip
-RUN addgroup -g 1000 -S devops \
+RUN apk add --no-cache bash ca-certificates curl git jq ncurses openssh python3 py3-pip \
+ && addgroup -g 1000 -S devops \
  && adduser -S -D -H -u 1000 -G devops -h /home/devops devops
 
 COPY --from=aws-cli-builder /usr/local/lib/aws-cli/ /usr/local/lib/aws-cli/
@@ -150,19 +155,26 @@ RUN ln -s /usr/local/gcloud/bin/gcloud /usr/local/bin/gcloud \
  && ln -s /usr/local/gcloud/bin/gsutil /usr/local/bin/gsutil \
  && ln -s /usr/local/gcloud/bin/bq /usr/local/bin/bq
 
-RUN mkdir -p /home/devops/bin \
- && chown -R devops:devops /home/devops \
- && chown -R root:root /usr/local/bin /usr/local/lib /usr/local/gcloud || true \
- && chmod +x /usr/local/bin/* && chmod +x /usr/local/tgenv/bin/* || true
+RUN mkdir -p /home/devops/bin /workdir \
+ && chown -R root:root /usr/local/bin /usr/local/lib /usr/local/gcloud \
+ && chmod -R a+rX /usr/local/tfenv /usr/local/tgenv \
+ && chmod +x /usr/local/bin/* /usr/local/tgenv/bin/* /usr/local/tfenv/bin/* \
+ && chown -R devops:devops /home/devops /workdir
 
-USER root
 ENV HOME=/home/devops
 ENV PATH="/usr/local/tgenv/bin:/usr/local/tfenv/bin:/usr/local/bin:/usr/local/gcloud/bin:$PATH"
 WORKDIR /home/devops
 
+# Pre-install the pinned Terraform / Terragrunt, then hand the version dirs to
+# the unprivileged user so `tfenv install <other>` works at runtime too.
 RUN tfenv install ${TERRAFORM_VERSION} && tfenv use ${TERRAFORM_VERSION} \
- && tgenv install ${TERRAGRUNT_VERSION} && tgenv use ${TERRAGRUNT_VERSION}
+ && tgenv install ${TERRAGRUNT_VERSION} && tgenv use ${TERRAGRUNT_VERSION} \
+ && chown -R devops:devops /usr/local/tfenv /usr/local/tgenv
 
 USER devops
-
 WORKDIR /workdir
+
+LABEL org.opencontainers.image.title="devops-tools" \
+      org.opencontainers.image.description="All-in-one DevOps toolkit: cloud CLIs, Kubernetes tooling and the Terraform stack on Alpine" \
+      org.opencontainers.image.source="https://github.com/derzkiy-dobryak/devops-tools-docker" \
+      org.opencontainers.image.licenses="MIT"

@@ -7,19 +7,47 @@ on:
     paths:
       - 'Dockerfile'
       - '.dockerignore'
+      - '.hadolint.yaml'
       - 'scripts/**'
+      - '.github/workflows/build-and-publish-image.yaml'
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
+# Cancel superseded runs on the same ref (keeps `latest` from racing).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege by default; jobs opt into what they need.
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/devops-tools
+
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Lint Dockerfile (hadolint)
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          failure-threshold: warning
+
   build:
+    needs: lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
+      security-events: write   # upload Trivy SARIF
+      actions: read            # codeql-action/upload-sarif on private repos
+      id-token: write          # keyless provenance/attestation signing
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -27,22 +55,74 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Lowercase image name
+        run: echo "IMAGE_NAME=${IMAGE_NAME,,}" >> "$GITHUB_ENV"
+
       - name: Log in to GHCR
+        # Not needed for pull_request events (nothing is pushed) and the token
+        # is read-only for forks anyway.
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Repo Owner fix
-        run: |
-          OWNER_LC=$(echo "${GITHUB_REPOSITORY_OWNER}" | tr '[:upper:]' '[:lower:]')
-          echo "owner_lc=$OWNER_LC" >> $GITHUB_ENV
+      - name: Derive image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long
 
-      - name: Build and push image
+      - name: Build image
+        id: build
         uses: docker/build-push-action@v7
         with:
-          push: true
-          tags: |
-            ghcr.io/${{ env.owner_lc }}/devops-tools:latest
-            ghcr.io/${{ env.owner_lc }}/devops-tools:${{ github.sha }}
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          load: ${{ github.event_name == 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          # Attestations produce a manifest list, which `load: true` can't import,
+          # so only emit them for real (pushed) builds.
+          provenance: ${{ github.event_name != 'pull_request' }}
+          sbom: ${{ github.event_name != 'pull_request' }}
+
+      - name: Scan image for vulnerabilities (Trivy)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ github.event_name == 'pull_request' && format('{0}:pr-{1}', env.IMAGE_NAME, github.event.number) || format('{0}@{1}', env.IMAGE_NAME, steps.build.outputs.digest) }}
+          format: sarif
+          output: trivy-results.sarif
+          ignore-unfixed: true
+          severity: CRITICAL,HIGH
+          vuln-type: os,library
+
+      - name: Upload Trivy results to code scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+
+      - name: Fail on CRITICAL vulnerabilities
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ github.event_name == 'pull_request' && format('{0}:pr-{1}', env.IMAGE_NAME, github.event.number) || format('{0}@{1}', env.IMAGE_NAME, steps.build.outputs.digest) }}
+          format: table
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: CRITICAL
+          vuln-type: os,library
+        env:
+          # Reuse the vuln DB the SARIF scan above already pulled into the cache.
+          TRIVY_SKIP_DB_UPDATE: true
+          TRIVY_SKIP_JAVA_DB_UPDATE: true

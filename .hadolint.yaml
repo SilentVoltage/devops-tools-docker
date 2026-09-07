@@ -1,0 +1,11 @@
+failure-threshold: warning
+ignored:
+  # apk package versions follow the pinned Alpine release; Renovate bumps the base.
+  - DL3018
+  # pip packages are pinned via build ARGs (azure-cli, oci-cli), not inline.
+  - DL3013
+  # aws-cli builder does `git clone && cd && ./configure && make` as one unit.
+  - DL3003
+trustedRegistries:
+  - docker.io
+  - ghcr.io

@@ -1,0 +1,19 @@
+# Keep the build context tiny and free of anything that could leak into layers.
+.git
+.github
+.gitignore
+.dockerignore
+*.md
+LICENSE
+renovate.json
+
+# Local credentials / state that must never be baked into an image
+.aws
+.azure
+.kube
+.oci
+.ssh
+.terraform*
+*.tfvars
+*.pem
+*.key

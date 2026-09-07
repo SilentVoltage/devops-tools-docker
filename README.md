@@ -30,6 +30,9 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 
 ## 🧩 Included Versions
 
+> Versions are pinned as build `ARG`s in the [Dockerfile](Dockerfile) and kept
+> current by Renovate. The table below is synced from those values.
+
 | Tool | Version |
 |------|----------|
 | Alpine | 3.24 |
@@ -47,6 +50,7 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Terraform | 1.16.0 |
 | Terragrunt | 0.99.5 |
 | terraform-docs | 0.24.0 |
+| SOPS | 3.12.1 |
 
 ---
 
@@ -54,15 +58,15 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 
 ### Run interactively
 ```bash
-docker run -it --rm ghcr.io/silentvoltage/devops-tools:latest /bin/bash
-````
+docker run -it --rm ghcr.io/derzkiy-dobryak/devops-tools:latest /bin/bash
+```
 
 ### Mount current working directory
 
 ```bash
 docker run -it --rm \
   -v $(pwd):/workdir \
-  ghcr.io/silentvoltage/devops-tools:latest
+  ghcr.io/derzkiy-dobryak/devops-tools:latest
 ```
 
 ### Example: Terraform
@@ -70,7 +74,7 @@ docker run -it --rm \
 ```bash
 docker run -it --rm \
   -v $(pwd):/workdir \
-  ghcr.io/silentvoltage/devops-tools:latest \
+  ghcr.io/derzkiy-dobryak/devops-tools:latest \
   terraform plan
 ```
 
@@ -79,7 +83,7 @@ docker run -it --rm \
 ```bash
 docker run -it --rm \
   -v ~/.kube/config:/home/devops/.kube/config:ro \
-  ghcr.io/silentvoltage/devops-tools:latest \
+  ghcr.io/derzkiy-dobryak/devops-tools:latest \
   kubectl get pods
 ```
 
@@ -108,7 +112,7 @@ devops_tools() {
     -v "$DEVOPS_HOME/terragrunt:/home/devops/.terragrunt.d" \
     -v "$(pwd):/workdir" \
     -w /workdir \
-    ghcr.io/silentvoltage/devops-tools:latest "$@"
+    ghcr.io/derzkiy-dobryak/devops-tools:latest "$@"
 }
 
 # Optional alias for quick access
@@ -149,8 +153,8 @@ and automatically mounts them into the container at runtime.
 To build your own version:
 
 ```bash
-git clone https://github.com/silentvoltage/devops-tools.git
-cd devops-tools
+git clone https://github.com/derzkiy-dobryak/devops-tools-docker.git
+cd devops-tools-docker
 
 docker build -t devops-tools:latest .
 ```
@@ -171,9 +175,28 @@ docker build \
 Add more tools with a simple `Dockerfile`:
 
 ```dockerfile
-FROM ghcr.io/silentvoltage/devops-tools:latest
+FROM ghcr.io/derzkiy-dobryak/devops-tools:latest
 RUN apk add --no-cache make aws-sam-cli
 ```
+
+---
+
+## 🔒 Security
+
+* Base image and every bundled tool version are pinned and updated via Renovate
+  (including base-image digest pinning and SHA-pinned GitHub Actions).
+* `kubectl` and `helm` downloads are checksum-verified during the build.
+* Every push builds an [SBOM][sbom] and [SLSA provenance][prov] attestation and
+  runs a [Trivy][trivy] scan; results land in the repo's *Security → Code
+  scanning* tab and a `CRITICAL` finding fails the build.
+* The image runs as the non-root `devops` user. Mount credentials read-only and
+  drop capabilities you don't need, e.g. `--cap-drop ALL --security-opt no-new-privileges`.
+* **Platform:** `linux/amd64` only (tool binaries are amd64); on Apple Silicon
+  Docker runs it via emulation.
+
+[sbom]: https://docs.docker.com/build/metadata/attestations/sbom/
+[prov]: https://docs.docker.com/build/metadata/attestations/slsa-provenance/
+[trivy]: https://trivy.dev/
 
 ---
 
@@ -187,6 +210,6 @@ MIT License
 
 **Maintainer:** [SilentVoltage](https://github.com/SilentVoltage)
 
-**Registry:** `ghcr.io/silentvoltage/devops-tools`
+**Registry:** `ghcr.io/derzkiy-dobryak/devops-tools`
 
 ---

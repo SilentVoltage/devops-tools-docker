@@ -4,11 +4,18 @@
     "config:recommended",
     ":semanticCommits",
     ":separateMajorReleases",
-    ":label(renovate)"
+    ":label(renovate)",
+    "helpers:pinGitHubActionDigests"
   ],
   "dockerfile": {
-    "enabled": true
+    "enabled": true,
+    "pinDigests": true
   },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security"]
+  },
+  "osvVulnerabilityAlerts": true,
   "customManagers": [
     {
       "customType": "regex",

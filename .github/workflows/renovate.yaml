@@ -1,16 +1,32 @@
 name: Renovate
+
 on:
   schedule:
     - cron: '0 14 * * 2'
   workflow_dispatch:
+    inputs:
+      logLevel:
+        description: Renovate log level
+        required: false
+        default: info
+        type: choice
+        options: [debug, info, warn]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: renovate
+  cancel-in-progress: false
 
 jobs:
   renovate:
     runs-on: ubuntu-latest
     env:
-      RENOVATE_AUTODISCOVER: true 
+      RENOVATE_AUTODISCOVER: true
       RENOVATE_PLATFORM: github
       RENOVATE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+      LOG_LEVEL: ${{ inputs.logLevel || 'info' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
