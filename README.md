@@ -37,14 +37,14 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | AWS CLI | 2.13.0 |
 | Azure CLI | 2.90.0 |
 | Google Cloud SDK | 443.0.0 |
-| OCI CLI | 3.93.0 |
+| OCI CLI | 3.94.0 |
 | Hetzner CLI | 1.68.0 |
 | kubectl | v1.37.0 |
 | kubectx / kubens | v0.11.0 |
 | Helm | v4.3.0 |
 | tfenv | v3.2.2 |
 | tgenv | v0.0.3 |
-| Terraform | 1.16.2 |
+| Terraform | 1.16.3 |
 | Terragrunt | 0.99.5 |
 | terraform-docs | 0.24.0 |
 
