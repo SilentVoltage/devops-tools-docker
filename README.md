@@ -35,16 +35,16 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Alpine | 3.24 |
 | Python | 3.10 |
 | AWS CLI | 2.13.0 |
-| Azure CLI | 2.90.0 |
+| Azure CLI | 2.91.0 |
 | Google Cloud SDK | 443.0.0 |
-| OCI CLI | 3.94.1 |
-| Hetzner CLI | 1.69.0 |
+| OCI CLI | 3.94.2 |
+| Hetzner CLI | 1.70.1 |
 | kubectl | v1.37.1 |
 | kubectx / kubens | v0.11.0 |
 | Helm | v4.3.0 |
 | tfenv | v3.2.2 |
 | tgenv | v0.0.3 |
-| Terraform | 1.16.4 |
+| Terraform | 1.16.5 |
 | Terragrunt | 0.99.5 |
 | terraform-docs | 0.24.0 |
 
