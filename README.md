@@ -37,7 +37,7 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | AWS CLI | 2.13.0 |
 | Azure CLI | 2.91.0 |
 | Google Cloud SDK | 443.0.0 |
-| OCI CLI | 3.94.2 |
+| OCI CLI | 3.95.0 |
 | Hetzner CLI | 1.70.1 |
 | kubectl | v1.37.1 |
 | kubectx / kubens | v0.11.0 |
