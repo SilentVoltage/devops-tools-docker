@@ -21,6 +21,8 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
   - Terraform via `tfenv`
   - Terragrunt via `tgenv`
   - `terraform-docs`
+- 🔐 **Secrets**
+  - Proton Pass CLI (`pass-cli`)
 - 🧱 **Base Utilities**
   - `bash`, `curl`, `git`, `jq`, `ncurses`, `openssh`, `python3/pip`
 - 🔒 Runs as a non-root user `devops`  
@@ -47,6 +49,7 @@ Ideal for **IaC developers**, **multi-cloud engineers**, and **CI/CD pipelines**
 | Terraform | 1.16.5 |
 | Terragrunt | 0.99.5 |
 | terraform-docs | 0.24.0 |
+| Proton Pass CLI | 2.7.0 |
 
 ---
 
@@ -96,7 +99,12 @@ DEVOPS_HOME="$HOME/.config/devops-tools"
 
 # Create and use the wrapper function
 devops_tools() {
+  # Proton Pass token, if set up (see below).
+  local pass_env=()
+  [ -f "$DEVOPS_HOME/proton-pass.env" ] && pass_env=(--env-file "$DEVOPS_HOME/proton-pass.env")
+
   docker run --rm --name devops-$RANDOM --network=host -it \
+    "${pass_env[@]}" \
     -v "$DEVOPS_HOME/ssh:/home/devops/.ssh" \
     -v "$DEVOPS_HOME/kube:/home/devops/.kube" \
     -v "$DEVOPS_HOME/aws:/home/devops/.aws" \
@@ -125,6 +133,29 @@ dt aws s3 ls
 
 This setup keeps your local credentials in `~/.config/devops-tools`
 and automatically mounts them into the container at runtime.
+
+---
+
+## 🔐 Proton Pass CLI
+
+The container can't use the kernel keyring, so the image sets `PROTON_PASS_KEY_PROVIDER=fs`.
+With `--rm`, each container starts logged out. Use a read-only personal access token (PAT) scoped to one vault; with the token in the environment, `pass-cli login` needs no browser.
+
+One-time setup:
+
+```bash
+dt bash
+pass-cli login        # web login: open the printed URL on the host
+pass-cli pat create --name devops-tools --expiration 1y    # token is shown once
+pass-cli pat access grant --pat-name devops-tools --vault-name home-stack --role viewer
+pass-cli logout
+exit
+
+echo 'PROTON_PASS_PERSONAL_ACCESS_TOKEN=<token>' > ~/.config/devops-tools/proton-pass.env
+chmod 600 ~/.config/devops-tools/proton-pass.env
+```
+
+The wrapper passes the token in when the file exists. Tokens last at most a year. To renew, repeat the flow with `pass-cli pat renew --pat-name devops-tools --expiration 1y` in place of create/grant, then update the file.
 
 ---
 
