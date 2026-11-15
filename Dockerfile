@@ -16,6 +16,7 @@ ARG HCLOUD_VERSION="1.70.1"
 ARG OCI_CLI_VERSION="3.94.2"
 ARG GCLOUD_VERSION="443.0.0"
 ARG SOPS_VERSION="3.12.1"
+ARG PASS_CLI_VERSION="2.7.0"
 
 ################ BASE BUILDER ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS base-builder
@@ -112,6 +113,28 @@ RUN curl -fsSL https://github.com/mozilla/sops/releases/download/v${SOPS_VERSION
  && chmod +x /usr/local/bin/sops \
  && /usr/local/bin/sops --version
 
+################ PROTON PASS CLI ################
+FROM debian:trixie-slim AS pass-cli-glibc
+RUN mkdir /glibc \
+ && cp -L /lib64/ld-linux-x86-64.so.2 \
+          /lib/x86_64-linux-gnu/libc.so.6 \
+          /lib/x86_64-linux-gnu/libm.so.6 \
+          /lib/x86_64-linux-gnu/libgcc_s.so.1 /glibc/
+
+FROM base-builder AS pass-cli-builder
+ARG PASS_CLI_VERSION
+COPY --from=pass-cli-glibc /glibc/ /opt/pass-cli/glibc/
+RUN apk add --no-cache patchelf \
+ && cd /tmp \
+ && curl -fsSLO https://github.com/protonpass/pass-cli/releases/download/${PASS_CLI_VERSION}/pass-cli-linux-x86_64 \
+ && curl -fsSLO https://github.com/protonpass/pass-cli/releases/download/${PASS_CLI_VERSION}/pass-cli-linux-x86_64.sha256 \
+ && sha256sum -c pass-cli-linux-x86_64.sha256 \
+ && patchelf --set-interpreter /opt/pass-cli/glibc/ld-linux-x86-64.so.2 \
+             --set-rpath /opt/pass-cli/glibc pass-cli-linux-x86_64 \
+ && install -m 0755 pass-cli-linux-x86_64 /usr/local/bin/pass-cli \
+ && rm -f pass-cli-linux-x86_64* \
+ && /usr/local/bin/pass-cli --version
+
 ################ DEVOPS TOOLS ################
 FROM python:3.10-alpine${ALPINE_VERSION} AS devops-tools
 
@@ -146,6 +169,9 @@ COPY --from=gcloud-cli-builder /usr/local/gcloud /usr/local/gcloud
 
 COPY --from=sops-builder /usr/local/bin/sops /usr/local/bin/sops
 
+COPY --from=pass-cli-builder /opt/pass-cli /opt/pass-cli
+COPY --from=pass-cli-builder /usr/local/bin/pass-cli /usr/local/bin/pass-cli
+
 RUN ln -s /usr/local/gcloud/bin/gcloud /usr/local/bin/gcloud \
  && ln -s /usr/local/gcloud/bin/gsutil /usr/local/bin/gsutil \
  && ln -s /usr/local/gcloud/bin/bq /usr/local/bin/bq
@@ -158,6 +184,8 @@ RUN mkdir -p /home/devops/bin \
 USER root
 ENV HOME=/home/devops
 ENV PATH="/usr/local/tgenv/bin:/usr/local/tfenv/bin:/usr/local/bin:/usr/local/gcloud/bin:$PATH"
+# Containers can't use the kernel keyring; the session key lives with the session.
+ENV PROTON_PASS_KEY_PROVIDER=fs
 WORKDIR /home/devops
 
 RUN tfenv install ${TERRAFORM_VERSION} && tfenv use ${TERRAFORM_VERSION} \

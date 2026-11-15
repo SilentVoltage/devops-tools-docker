@@ -181,6 +181,18 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ARG (?<depName>PASS_CLI_VERSION)=(?:\"?v?(?<currentValue>[0-9.]+)\"?)"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "protonpass/pass-cli",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/^README\\.md$/"
       ],
       "matchStrings": [
@@ -330,6 +342,17 @@
         "\\| terraform-docs \\| (?<currentValue>[0-9.]+)"
       ],
       "depNameTemplate": "terraform-docs/terraform-docs",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^README\\.md$/"
+      ],
+      "matchStrings": [
+        "\\| Proton Pass CLI \\| (?<currentValue>[0-9.]+)"
+      ],
+      "depNameTemplate": "protonpass/pass-cli",
       "datasourceTemplate": "github-releases"
     }
   ],
